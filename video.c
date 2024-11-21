@@ -1,16 +1,33 @@
 #include <string.h>
-#include "config/video.h"
-// Parameters:
-//   w: width of the image
-//   h: height of the image
-//   durationMovie: duration in second of movie (colored image)
-//   durationCredits: duration in second of credit (image Black/White)
-//   unit: Unit of the output value. It could be 'bt' byte, 'ko' kilobits, 'mo' megabits, 'go' gigabits
-// Return value
-//   colored video size (based on the unit passed parametter)
-float video(int w, int h, int durationMovie, int durationCredits, int fps, char* unit) {
-   // YOUR CODE HERE - BEGIN
 
-   // YOUR CODE HERE - END
-   return 0;
+// Function to calculate the size of a video
+float video(int w, int h, int durationMovie, int durationCredits, int fps, char* unit) {
+    // Constants for bits per pixel
+    const int BITS_PER_PIXEL_COLOR = 24; // 24 bits for colored (RGB)
+    const int BITS_PER_PIXEL_BW = 8;     // 8 bits for black and white (grayscale)
+
+    // Calculate total number of frames
+    int totalFramesMovie = durationMovie * fps;  // Total frames for the movie
+    int totalFramesCredits = durationCredits * fps;  // Total frames for the credits
+
+    // Calculate size in bits for each section
+    float sizeMovieBits = (float)(w * h * BITS_PER_PIXEL_COLOR * totalFramesMovie);
+    float sizeCreditsBits = (float)(w * h * BITS_PER_PIXEL_BW * totalFramesCredits);
+
+    // Total size in bits
+    float totalSizeBits = sizeMovieBits + sizeCreditsBits;
+
+    // Convert to the requested unit
+    if (strcmp(unit, "bt") == 0) { // Bytes
+        return totalSizeBits / 8.0;
+    } else if (strcmp(unit, "ko") == 0) { // Kilobytes
+        return (totalSizeBits / 8.0) / 1024.0;
+    } else if (strcmp(unit, "mo") == 0) { // Megabytes
+        return (totalSizeBits / 8.0) / (1024.0 * 1024.0);
+    } else if (strcmp(unit, "go") == 0) { // Gigabytes
+        return (totalSizeBits / 8.0) / (1024.0 * 1024.0 * 1024.0);
+    } else {
+        // Invalid unit
+        return -1.0; // Return -1 to indicate an error
+    }
 }
